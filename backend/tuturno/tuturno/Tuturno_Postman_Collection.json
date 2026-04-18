@@ -1,0 +1,309 @@
+{
+	"info": {
+		"_postman_id": "a933f4a1-8d2a-4bc4-9d5f-15df12a23332",
+		"name": "Tuturno API",
+		"description": "Colección de Postman para probar los endpoints del backend de Tuturno.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Autenticación",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@tuturno.com\",\n  \"password\": \"admin\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Cliente Prueba\",\n  \"email\": \"cliente@tuturno.com\",\n  \"password\": \"password123\",\n  \"phone\": \"600123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "Listar Usuarios",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/usuarios",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Nuevo Usuario\",\n  \"email\": \"nuevo@ejemplo.com\",\n  \"password\": \"pass123\",\n  \"telefono\": \"611223344\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/usuarios",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Usuario",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/usuarios/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"usuarios",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Servicios",
+			"item": [
+				{
+					"name": "Crear Servicio",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Corte de pelo\",\n  \"descripcion\": \"Corte estilo moderno\",\n  \"precio\": 15.50,\n  \"duracionMinutos\": 30\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/servicios",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"servicios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Servicio",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/servicios/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"servicios",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Citas",
+			"item": [
+				{
+					"name": "Listar Citas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/citas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"citas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Cita",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fechaInicio\": \"2026-03-20T10:30:00\",\n  \"usuarioId\": 1,\n  \"servicioId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/citas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"citas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Cita",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/citas/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"citas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "tu_token_jwt_aqui",
+			"type": "string"
+		}
+	]
+}

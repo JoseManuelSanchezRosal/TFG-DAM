@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TuTurno - Salón de Belleza RM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen">
+        <img src="img/icons/RosaDorado.png" alt="Cargando Rosa Martínez..." class="splash-logo">
+    </div>
+    <script>
+        // Ocultar el splash screen después de 3 segundos
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if (splash) splash.classList.add('fade-out');
+            }, 3000);
+        });
+    </script>
+
+    <header class="main-header">
+        <div class="mobile-menu-toggle" onclick="app.toggleMenu()" style="display: none;">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="logo" onclick="app.navigateTo('landing')">
+            <img src="img/icons/RosaDorado.png" alt="Rosa Martínez Logo">
+        </div>
+        <div class="mobile-header-right" style="display: none;">
+            <button id="btn-mobile-profile" class="nav-btn icon-btn hidden" onclick="app.navigateToDashboard()">
+                <i class="fas fa-user-circle"></i>
+            </button>
+            <button id="btn-mobile-logout" class="nav-btn icon-btn hidden" onclick="app.logout()">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+        <nav id="nav-menu">
+            <button id="btn-nav-landing" class="nav-btn active" onclick="app.navigateTo('landing')">Inicio</button>
+            <button id="btn-nav-facilities" class="nav-btn" onclick="app.navigateTo('facilities')">Instalaciones</button>
+            <button id="btn-nav-client-zone" class="nav-btn outline-ghost" onclick="app.navigateTo('client-zone')">Zona Clientes</button>
+            <button id="btn-nav-contact" class="nav-btn" onclick="app.navigateTo('contact')">Contacto</button>
+            <button id="btn-nav-admin" class="nav-btn hidden" onclick="app.navigateToDashboard()">Administración</button>
+            <button id="btn-nav-jefe" class="nav-btn hidden" onclick="app.navigateToDashboard()">Agenda y Servicios</button>
+            <button id="btn-logout" class="nav-btn logout-btn hidden" onclick="app.logout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
+        </nav>
+    </header>
+
+    <main class="app-container">
+        
+        <section id="view-landing" class="view active-view fade-in">
+            <div class="hero-section scale-up-anim crown-box">
+                <div class="hero-content">
+                    <img src="img/icons/RosaDorado.png" alt="Rosa Martínez Logo" class="hero-logo scale-up-anim">
+                    <h1>Tu belleza, nuestra pasión</h1>
+                    <p>Reserva en segundos y comienza a disfrutar de una experiencia pensada únicamente para ti.</p>
+                    <button class="btn btn-primary btn-large go-client-zone" onclick="app.navigateTo('client-zone')">
+                        <i class="far fa-calendar-check"></i> Reservar mi momento
+                    </button>
+                </div>
+            </div>
+            
+            <div class="features-section">
+                <div class="feature-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Reserva cuando quieras</h3>
+                    <p>Sin esperas ni llamadas. Tu tiempo, a tu ritmo.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-spa"></i>
+                    <h3>Servicios de lujo</h3>
+                    <p>Tratamientos exclusivos pensados para mimarte en cada visita.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Siempre a tu lado</h3>
+                    <p>Gestiona tus citas desde cualquier dispositivo en cualquier momento.</p>
+                </div>
+            </div>
+
+            </section>
+
+        <section id="view-auth" class="view fade-in">
+            <div class="auth-container crown-box bg-white">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="app.switchAuthTab('login')">Acceder</button>
+                    <button class="auth-tab" onclick="app.switchAuthTab('register')">Crear cuenta</button>
+                </div>
+
+                <div id="form-login" class="auth-form-wrapper active">
+                    <h2>¡Qué alegría verte de nuevo!</h2>
+                    <form id="loginForm" onsubmit="event.preventDefault(); app.login();">
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="login-email" placeholder="Correo electrónico" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="login-password" placeholder="Contraseña" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">Entrar</button>
+                        <p id="login-error" class="error-msg"></p>
+                    </form>
+
+                    <!-- ⚡ ACCESO RÁPIDO — Solo en fase de desarrollo -->
+                    <div style="margin-top:1.5rem; padding-top:1.2rem; border-top: 1px dashed #e0d8c8;">
+                        <p style="text-align:center; font-size:0.78rem; color:#bbb; margin-bottom:0.8rem; letter-spacing:0.05em; text-transform:uppercase;">
+                            ⚡ Acceso rápido (dev)
+                        </p>
+                        <div style="display:flex; gap:0.6rem; flex-wrap:wrap; justify-content:center;">
+                            <button onclick="app.devLogin('josema@test.com','cliente')" style="
+                                flex:1; min-width:90px; padding:0.55rem 0.5rem;
+                                border-radius:10px; border:1px solid #c8e6c9;
+                                background:#f1f8f1; color:#2e7d32;
+                                font-size:0.82rem; font-weight:600; cursor:pointer;
+                                transition:background 0.2s;">
+                                <i class="fas fa-user"></i> Cliente
+                            </button>
+                            <button onclick="app.devLogin('jefe@test.com','jefe')" style="
+                                flex:1; min-width:90px; padding:0.55rem 0.5rem;
+                                border-radius:10px; border:1px solid #bbdefb;
+                                background:#e8f4fd; color:#1565c0;
+                                font-size:0.82rem; font-weight:600; cursor:pointer;
+                                transition:background 0.2s;">
+                                <i class="fas fa-crown"></i> Jefe
+                            </button>
+                            <button onclick="app.devLogin('admin@test.com','admin')" style="
+                                flex:1; min-width:90px; padding:0.55rem 0.5rem;
+                                border-radius:10px; border:1px solid #e1bee7;
+                                background:#fdf3ff; color:#6a1b9a;
+                                font-size:0.82rem; font-weight:600; cursor:pointer;
+                                transition:background 0.2s;">
+                                <i class="fas fa-shield-alt"></i> Admin
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="form-register" class="auth-form-wrapper">
+                    <h2>Un placer darte la bienvenida</h2>
+                    <form id="registerForm" onsubmit="event.preventDefault(); app.register();">
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="reg-name" placeholder="Tu nombre" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="reg-email" placeholder="Correo electrónico" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" id="reg-phone" placeholder="Teléfono" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="reg-password" placeholder="Crea tu contraseña" required>
+                        </div>
+                        <button type="submit" class="btn btn-secondary btn-full">Crear mi cuenta</button>
+                        <p id="register-error" class="error-msg"></p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-facilities" class="view fade-in">
+            <div class="crown-box bg-white">
+                <div class="dashboard-header text-center" style="margin-bottom: 3rem;">
+                <h2 style="text-align: center;">Nuestras Instalaciones</h2>
+                <p style="text-align: center;" class="text-muted">Un espacio diseñado para tu bienestar en pleno centro.</p>
+            </div>
+            <div class="facilities-grid">
+                <div class="facility-card"><img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&q=80" alt="Salón Principal"></div>
+                <div class="facility-card"><img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=600&q=80" alt="Zona de Lavado"></div>
+                <div class="facility-card"><img src="https://images.unsplash.com/photo-1516975080661-46b0854d6fa7?auto=format&fit=crop&w=600&q=80" alt="Estética"></div>
+                <div class="facility-card"><img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=600&q=80" alt="Manicura"></div>
+            </div>
+            </div>
+        </section>
+
+        <section id="view-client-zone" class="view fade-in">
+            <div class="crown-box bg-white">
+                <div class="dashboard-header" id="client-logged-in-header" style="display: none; margin-bottom: 2rem;">
+                    <h2>Encantados de verte, <span id="client-name-display">clienta</span> ✨</h2>
+                    <p style="color: var(--color-light-text);">Tu espacio personal de belleza.</p>
+                </div>
+            
+            <div class="dashboard-header text-center" id="client-logged-out-header" style="margin-bottom: 2rem;">
+                <h2>Elige tu tratamiento</h2>
+                <p style="color: var(--color-light-text);">Selecciona el cuidado que deseas y elige el momento que mejor te vaya. Si ya tienes cuenta, <strong style="color: var(--color-gold); cursor: pointer; text-decoration: underline; font-weight: 800;" onclick="app.navigateTo('auth'); app.switchAuthTab('login');">accede aquí</strong></p>
+            </div>
+
+            <div class="client-grid" style="gap: 2rem; max-width: 1200px; margin: 0 auto;">
+                
+                <!-- CALENDAR WIDGET -->
+                <div class="booking-section card">
+                    <h3 class="hidden-mobile" style="text-align: center; margin-bottom: 0.5rem;"><i class="far fa-calendar-alt"></i> Consulta nuestra disponibilidad</h3>
+                    <p class="hidden-mobile" style="text-align: center; color: var(--color-light-text); margin-bottom: 2rem;">Selecciona un tratamiento para ver los huecos libres.</p>
+                    
+                    <div id="booking-wizard">
+                        <div id="step-1" class="wizard-step active">
+                            <h4 class="hidden-mobile">¿Qué cuidado deseas hoy?</h4>
+                            
+                            <!-- FILTROS CATEGORIA: visible solo en escritorio -->
+                            <div class="category-tabs" id="service-category-tabs">
+                                <button class="chip active" onclick="app.bookingWizard.renderServices('Todos')">Todos</button>
+                                <button class="chip" onclick="app.bookingWizard.renderServices('Peluquería - Mujer')">Pelo Mujer</button>
+                                <button class="chip" onclick="app.bookingWizard.renderServices('Peluquería - Hombre')">Pelo Hombre</button>
+                                <button class="chip" onclick="app.bookingWizard.renderServices('Estética - Mujer')">Estética M</button>
+                                <button class="chip" onclick="app.bookingWizard.renderServices('Estética - Hombre')">Estética H</button>
+                            </div>
+
+                            <!-- BUSCADOR: visible solo en móvil -->
+                            <div class="mobile-search-bar">
+                                <div class="input-group" style="margin-bottom: 1rem;">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="mobile-service-search" placeholder="Busca tu tratamiento..." oninput="app.bookingWizard.filterMobileServices(this.value)">
+                                </div>
+                            </div>
+
+                            <div class="services-list-ux" id="client-services-list">
+                                <!-- Servicios inyectados aquí -->
+                            </div>
+                            
+                            <!-- CAJA FLOTANTE CHECKOUT -->
+                            <div id="checkout-summary" class="checkout-floating hidden">
+                                <div>
+                                    <p style="margin: 0; font-size: 0.9rem; color: var(--color-light-text);">Tu selección:</p>
+                                    <h3 style="margin: 0; color: var(--color-dark);"><span id="checkout-total-price">0.00</span>€ <small style="font-size:0.8rem; color:var(--color-light-text); font-weight: normal;">(<span id="checkout-total-duration">0</span> min)</small></h3>
+                                </div>
+                                <button class="btn btn-primary" onclick="app.bookingWizard.goToStep2()">Ver disponibilidad <i class="fas fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+
+                        <div id="step-2" class="wizard-step">
+                            <h4>Elige tu momento perfecto</h4>
+                            <div class="selected-service-summary" id="selected-service-info"></div>
+                            
+                            <div class="step-2-layout">
+                                <div class="calendar-wrapper">
+                                    <div class="calendar-controls">
+                                        <button class="btn btn-outline btn-small" onclick="app.bookingWizard.changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                                        <h5 id="calendar-month-year">Cargando...</h5>
+                                        <button class="btn btn-outline btn-small" onclick="app.bookingWizard.changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                                    </div>
+
+                                    <div class="calendar-grid" id="calendar-grid">
+                                        <div class="cal-header">Lun</div>
+                                        <div class="cal-header">Mar</div>
+                                        <div class="cal-header">Mié</div>
+                                        <div class="cal-header">Jue</div>
+                                        <div class="cal-header">Vie</div>
+                                        <div class="cal-header">Sáb</div>
+                                        <div class="cal-header">Dom</div>
+                                    </div>
+                                    <div class="wizard-actions hidden-mobile" style="margin-top: 1rem; border:none;">
+                                        <button class="btn btn-outline btn-small" onclick="app.bookingWizard.prevStep()">Volver</button>
+                                    </div>
+                                </div>
+                                
+                                <div id="time-slots-container" class="time-slots hidden">
+                                    <h5>Horas para el <span id="selected-date-text"></span></h5>
+                                    <div id="time-slots-grid" class="slots-grid">
+                                    </div>
+                                    <div class="wizard-actions" style="margin-top: 2rem; text-align: right; border:none;">
+                                        <button id="btn-next-step2" class="btn btn-primary hidden" onclick="app.bookingWizard.goToConfirm()">Siguiente</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="step-3" class="wizard-step">
+                            <h4>Confirma tu cita</h4>
+                            <div class="confirmation-summary">
+                                <p><strong>Servicio:</strong> <span id="confirm-service"></span></p>
+                                <p><strong>Fecha y Hora:</strong> <span id="confirm-datetime"></span></p>
+                                <p><strong>Duración est.:</strong> <span id="confirm-duration"></span> min</p>
+                                <p><strong>Precio:</strong> <span id="confirm-price"></span>€</p>
+                            </div>
+                            <div class="wizard-actions">
+                                <button class="btn btn-outline" onclick="app.bookingWizard.prevStep()">Modificar</button>
+                                <button class="btn btn-success" onclick="app.bookingWizard.confirmBooking()">Reservar mi cita</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- FIN CALENDAR WIDGET -->
+
+                <div class="my-appointments-section card" id="my-appointments-card" style="display: none;">
+                    <h3><i class="far fa-calendar-alt"></i> Tus próximas citas</h3>
+                    <div id="client-citas-list" class="citas-container">
+                        <p class="empty-state">Aún no tienes ninguna cita. ¡Reserva tu momento ahora!</p>
+                    </div>
+                    
+                    <div class="danger-zone mt-4" style="display:flex; flex-wrap:wrap; gap:0.8rem; align-items:center; justify-content:space-between;">
+                        <button class="btn btn-small" onclick="app.errorReport.open()" style="background:#fff7ed;color:#c2410c;border:1px solid #fdba74;">
+                            <i class="fas fa-bug"></i> Reportar un error
+                        </button>
+                        <button class="btn btn-danger btn-small" onclick="app.deleteAccount()"><i class="fas fa-user-times"></i> Cancelar mi cuenta</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <section id="view-contact" class="view fade-in">
+            <div class="crown-box bg-white">
+                <div class="dashboard-header text-center" style="margin-bottom: 3rem;">
+                <h2 style="text-align: center; font-size: 2.5rem; font-weight: bold;">Contacto</h2>
+                <p style="text-align: center; color: var(--color-light-text); font-size: 1.1rem;">Visite nuestro Salón</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info card">
+                    <h3><i class="fas fa-map-marker-alt"></i> Dónde estamos</h3>
+                    <p>Rosa Martínez Salón de Belleza<br>C. Rosalía de Castro, 3<br>14120 Fuente Palmera, Córdoba</p>
+                    <br>
+                    <h3><i class="fas fa-phone-alt"></i> Teléfono</h3>
+                    <p>+34 600 111 222</p>
+                    <br>
+                    <h3><i class="far fa-clock"></i> Horario</h3>
+                    <p>Martes a Viernes: 10:00 - 19:00<br>Sábados: 10:00 - 14:00</p>
+                </div>
+                
+                <div class="contact-form card" style="padding: 0; overflow: hidden; border-radius: var(--border-radius);">
+                    <iframe
+                        src="https://maps.google.com/maps?q=Rosa+Mart%C3%ADnez+Sal%C3%B3n+de+Belleza%2C+C.+Rosal%C3%ADa+de+Castro%2C+3%2C+14120+Fuente+Palmera%2C+C%C3%B3rdoba&output=embed"
+                        width="100%"
+                        height="100%"
+                        style="border: 0; display: block; min-height: 350px;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Ubicación de Rosa Martínez Salón de Belleza">
+                    </iframe>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <section id="view-auth" class="view fade-in">
+            <div class="auth-container">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="app.switchAuthTab('login')">Iniciar Sesión</button>
+                    <button class="auth-tab" onclick="app.switchAuthTab('register')">Registrarse</button>
+                </div>
+
+                <div id="form-login" class="auth-form-wrapper active">
+                    <h2>Bienvenido de nuevo</h2>
+                    <form id="loginForm" onsubmit="event.preventDefault(); app.login();">
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="login-email" placeholder="Correo Electrónico" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="login-password" placeholder="Contraseña" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">Entrar</button>
+                        <p id="login-error" class="error-msg"></p>
+                    </form>
+                </div>
+
+                <div id="form-register" class="auth-form-wrapper">
+                    <h2>Crea tu cuenta</h2>
+                    <form id="registerForm" onsubmit="event.preventDefault(); app.register();">
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="reg-name" placeholder="Nombre completo" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="reg-email" placeholder="Correo Electrónico" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" id="reg-phone" placeholder="Teléfono" required>
+                        </div>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="reg-password" placeholder="Contraseña" required>
+                        </div>
+                        <button type="submit" class="btn btn-secondary btn-full">Registrarse</button>
+                        <p id="register-error" class="error-msg"></p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-admin" class="view fade-in">
+            <div class="crown-box bg-white">
+                <div class="dashboard-header admin-header">
+                <h2>Agenda y Servicios <span class="badge">PRO</span></h2>
+            </div>
+            
+            <div class="auth-tabs" style="max-width: 600px; margin: 0 auto 2rem auto; border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--shadow);">
+                <button class="auth-tab active" id="tab-btn-calendar" onclick="app.admin.switchTab('calendar')">Calendario de Citas</button>
+                <button class="auth-tab" id="tab-btn-catalog" onclick="app.admin.switchTab('catalog')">Catálogo de Servicios</button>
+            </div>
+
+            <div class="admin-grid" style="display: block;">
+                <!-- PESTAÑA CALENDARIO -->
+                <div class="master-calendar-section card" id="admin-tab-calendar">
+                    <h3><i class="fas fa-calendar-alt"></i> Calendario General</h3>
+                    
+                    <!-- Layout 2/3 + 1/3 -->
+                    <div style="display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap;">
+                        
+                        <!-- Columna izquierda: Calendario (2/3) -->
+                        <div style="flex: 2; min-width: 300px;">
+                            <div class="calendar-controls">
+                                <button class="btn btn-outline btn-small" onclick="app.admin.changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                                <h5 id="admin-calendar-month-year">Cargando...</h5>
+                                <button class="btn btn-outline btn-small" onclick="app.admin.changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                            </div>
+
+                            <div class="calendar-grid" id="admin-calendar-grid">
+                                <div class="cal-header">Lun</div>
+                                <div class="cal-header">Mar</div>
+                                <div class="cal-header">Mié</div>
+                                <div class="cal-header">Jue</div>
+                                <div class="cal-header">Vie</div>
+                                <div class="cal-header">Sáb</div>
+                                <div class="cal-header">Dom</div>
+                            </div>
+                            
+                            <div style="display: flex; gap: 1rem; margin-top: 1rem; justify-content: center; font-size: 0.9rem;">
+                                <span style="display:flex; align-items:center; gap:0.5rem;"><div style="width:15px;height:15px;background:#e8f5e9;border:1px solid #c8e6c9;border-radius:3px;"></div> Con citas</span>
+                                <span style="display:flex; align-items:center; gap:0.5rem;"><div style="width:15px;height:15px;background:#ffebee;border:1px solid #ffcdd2;border-radius:3px;"></div> Sin citas</span>
+                            </div>
+                        </div>
+
+                        <!-- Columna derecha: Citas del día (1/3) -->
+                        <div style="flex: 1; min-width: 220px; border-left: 2px solid var(--color-cream-dark); padding-left: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                                <h4 style="margin: 0;">Citas del <span id="admin-selected-date-text" style="color: var(--color-gold);">día</span></h4>
+                                <button class="btn btn-primary btn-small" onclick="app.admin.addCitaDialog()"><i class="fas fa-plus"></i> Añadir</button>
+                            </div>
+                            <div id="admin-citas-list" class="citas-container admin-style">
+                                <p class="empty-state">Selecciona un día.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- PESTAÑA CATÁLOGO -->
+                <div class="catalog-section card" id="admin-tab-catalog" style="display: none;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap: wrap; gap: 1rem;">
+                        <h3 style="margin: 0;"><i class="fas fa-clipboard-list"></i> Catálogo</h3>
+                        <button class="btn btn-primary btn-small" onclick="document.getElementById('serviceForm').classList.toggle('hidden'); if(app.adminGuideActive && app.adminGuideStep === 2) app.advanceAdminGuideStep(3);"><i class="fas fa-plus"></i> Nuevo Servicio</button>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <input type="text" id="admin-search-service" placeholder="Buscar por nombre..." onkeyup="app.admin.filterServices()" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid #ddd; border-radius: var(--border-radius); font-family: inherit;">
+                    </div>
+                    
+                    <form id="serviceForm" class="service-form hidden" onsubmit="event.preventDefault(); app.admin.saveService();" style="background:#f9f9f9; padding:1.5rem; border-radius:8px; margin-bottom:2rem; margin-top:-1rem;">
+                        <input type="hidden" id="srv-id">
+                        <div class="input-row">
+                            <input type="text" id="srv-name" placeholder="Nombre del servicio" required style="background:#fff">
+                            <input type="number" id="srv-price" placeholder="Precio (€)" step="0.01" required style="background:#fff">
+                        </div>
+                        <input type="text" id="srv-desc" placeholder="Descripción breve" required style="background:#fff">
+                        <div class="input-row">
+                            <input type="number" id="srv-duration" placeholder="Minutos" required style="background:#fff">
+                            <select id="srv-categoria" required style="background:#fff; padding:0.8rem; border:1px solid #ccc; border-radius:4px; width:100%; font-family:inherit;">
+                                <option value="">Selecciona Categoría...</option>
+                                <option value="Peluquería - Mujer">Peluquería - Mujer</option>
+                                <option value="Peluquería - Hombre">Peluquería - Hombre</option>
+                                <option value="Estética - Mujer">Estética - Mujer</option>
+                                <option value="Estética - Hombre">Estética - Hombre</option>
+                            </select>
+                        </div>
+                        <div class="input-row" style="margin-top: 1rem;">
+                            <button type="submit" class="btn btn-primary" id="btn-save-service">Guardar</button>
+                            <button type="button" class="btn btn-outline" id="btn-cancel-edit" onclick="app.admin.resetServiceForm()">Ocultar</button>
+                        </div>
+                    </form>
+
+                    <div id="admin-services-list" class="admin-services-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem;">
+                        <!-- Cards here -->
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <section id="view-superadmin" class="view fade-in">
+            <div class="crown-box bg-white">
+                <div class="dashboard-header admin-header">
+                <h2>Panel de Administración <span class="badge">PRO</span></h2>
+                <p style="color: var(--color-light-text); text-align: center;">Gestión Integral de Usuarios y Sistema</p>
+                </div>
+
+                <!-- TABS del panel admin -->
+                <div class="auth-tabs" style="max-width:700px;margin:1.5rem auto 2rem;border-radius:var(--border-radius);overflow:hidden;box-shadow:var(--shadow);">
+                    <button class="auth-tab active" id="sa-tab-users" onclick="app.superadmin.switchTab('users')"><i class="fas fa-users"></i> Directorio de Clientes</button>
+                    <button class="auth-tab" id="sa-tab-errors" onclick="app.superadmin.switchTab('errors')"><i class="fas fa-bug"></i> Registro de Errores</button>
+                </div>
+                <!-- PESTAÑA: DIRECTORIO DE CLIENTES -->
+                <div id="sa-panel-users" class="card" style="margin-top:0;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap: wrap; gap: 1rem;">
+                        <h3 style="margin: 0;"><i class="fas fa-users"></i> Directorio de Clientes</h3>
+                        <button class="btn btn-primary btn-small" onclick="app.superadmin.openUserModal()"><i class="fas fa-user-plus"></i> Añadir Usuario</button>
+                    </div>
+                    <div style="margin-bottom: 2rem;">
+                        <input type="text" id="superadmin-search-user" placeholder="Buscar por nombre o email..." onkeyup="app.superadmin.filterUsers()" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid #ddd; border-radius: var(--border-radius); font-family: inherit;">
+                    </div>
+                    <div class="table-responsive" style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; min-width: 600px;">
+                            <thead>
+                                <tr style="background: var(--color-cream-light); border-bottom: 2px solid var(--color-gold);">
+                                    <th style="padding: 1rem; text-align: left; color: var(--color-dark);">ID</th>
+                                    <th style="padding: 1rem; text-align: left; color: var(--color-dark);">Nombre</th>
+                                    <th style="padding: 1rem; text-align: left; color: var(--color-dark);">Email</th>
+                                    <th style="padding: 1rem; text-align: left; color: var(--color-dark);">Teléfono</th>
+                                    <th style="padding: 1rem; text-align: left; color: var(--color-dark);">Rol</th>
+                                    <th style="padding: 1rem; text-align: center; color: var(--color-dark);">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="superadmin-users-table">
+                                <!-- Filas de usuarios cargadas dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PESTAÑA: REGISTRO DE ERRORES -->
+                <div id="sa-panel-errors" class="card" style="margin-top:0; display:none;">
+                    <h3 style="margin-bottom:1.5rem;"><i class="fas fa-bug"></i> Registro de Informes de Error</h3>
+
+                    <!-- Estadísticas rápidas -->
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;margin-bottom:1.5rem;">
+                        <div style="background:#f8fafc;border-radius:12px;padding:1rem;text-align:center;border:1px solid #e2e8f0;">
+                            <div style="font-size:1.8rem;font-weight:700;color:var(--color-dark);" id="el-stat-total">0</div>
+                            <div style="font-size:0.82rem;color:#64748b;">Total</div>
+                        </div>
+                        <div style="background:#fef2f2;border-radius:12px;padding:1rem;text-align:center;border:1px solid #fca5a5;">
+                            <div style="font-size:1.8rem;font-weight:700;color:#b91c1c;" id="el-stat-critico">0</div>
+                            <div style="font-size:0.82rem;color:#b91c1c;">Críticos</div>
+                        </div>
+                        <div style="background:#fff7ed;border-radius:12px;padding:1rem;text-align:center;border:1px solid #fdba74;">
+                            <div style="font-size:1.8rem;font-weight:700;color:#c2410c;" id="el-stat-moderado">0</div>
+                            <div style="font-size:0.82rem;color:#c2410c;">Moderados</div>
+                        </div>
+                        <div style="background:#fefce8;border-radius:12px;padding:1rem;text-align:center;border:1px solid #fde047;">
+                            <div style="font-size:1.8rem;font-weight:700;color:#854d0e;" id="el-stat-leve">0</div>
+                            <div style="font-size:0.82rem;color:#854d0e;">Leves</div>
+                        </div>
+                    </div>
+
+                    <!-- Filtros -->
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:0.8rem;margin-bottom:1.5rem;">
+                        <input type="text" id="el-filter-user" placeholder="👤 Filtrar por usuario (email)..." oninput="app.errorLog.filter()" style="padding:0.65rem 1rem;border:1px solid #ddd;border-radius:var(--border-radius);font-family:inherit;font-size:0.9rem;">
+                        <input type="text" id="el-filter-text" placeholder="🔍 Buscar en descripciones..." oninput="app.errorLog.filter()" style="padding:0.65rem 1rem;border:1px solid #ddd;border-radius:var(--border-radius);font-family:inherit;font-size:0.9rem;">
+                        <select id="el-filter-severity" onchange="app.errorLog.filter()" style="padding:0.65rem 1rem;border:1px solid #ddd;border-radius:var(--border-radius);font-family:inherit;font-size:0.9rem;">
+                            <option value="">Todas las severidades</option>
+                            <option value="critico">🔴 Crítico</option>
+                            <option value="moderado">🟠 Moderado</option>
+                            <option value="leve">🟡 Leve</option>
+                        </select>
+                        <select id="el-filter-category" onchange="app.errorLog.filter()" style="padding:0.65rem 1rem;border:1px solid #ddd;border-radius:var(--border-radius);font-family:inherit;font-size:0.9rem;">
+                            <option value="">Todas las categorías</option>
+                            <option value="login_fail">Fallo de acceso</option>
+                            <option value="session_lost">Sesión expirada</option>
+                            <option value="booking_fail">Error en reserva</option>
+                            <option value="data_loss">Pérdida de datos</option>
+                            <option value="server_error">Error del servidor</option>
+                            <option value="service_load">Carga de servicios</option>
+                            <option value="calendar_fail">Calendario</option>
+                            <option value="register_fail">Registro</option>
+                            <option value="cancel_fail">Cancelación de cita</option>
+                            <option value="slot_error">Horarios incorrectos</option>
+                            <option value="ui_broken">Visualización / UI</option>
+                            <option value="button_fail">Botón no funciona</option>
+                            <option value="image_fail">Imagen o icono</option>
+                            <option value="slow_app">App lenta</option>
+                            <option value="other">Otros</option>
+                        </select>
+                        <select id="el-filter-device" onchange="app.errorLog.filter()" style="padding:0.65rem 1rem;border:1px solid #ddd;border-radius:var(--border-radius);font-family:inherit;font-size:0.9rem;">
+                            <option value="">Todos los dispositivos</option>
+                            <option value="pc_windows">Ordenador — Windows</option>
+                            <option value="pc_mac">Ordenador — Mac</option>
+                            <option value="pc_linux">Ordenador — Linux</option>
+                            <option value="mobile_android">Móvil — Android</option>
+                            <option value="mobile_ios">Móvil — iPhone</option>
+                            <option value="tablet_android">Tablet — Android</option>
+                            <option value="tablet_ios">Tablet — iPad</option>
+                            <option value="other">Otro</option>
+                        </select>
+                    </div>
+
+                    <!-- Tabla de errores -->
+                    <div style="overflow-x:auto;">
+                        <table style="width:100%;border-collapse:collapse;min-width:700px;">
+                            <thead>
+                                <tr style="background:var(--color-cream-light);border-bottom:2px solid var(--color-gold);font-size:0.85rem;">
+                                    <th style="padding:0.8rem 1rem;text-align:left;color:var(--color-dark);">Severidad</th>
+                                    <th style="padding:0.8rem 1rem;text-align:left;color:var(--color-dark);">Tipo de Error</th>
+                                    <th style="padding:0.8rem 1rem;text-align:left;color:var(--color-dark);">Usuario</th>
+                                    <th style="padding:0.8rem 1rem;text-align:left;color:var(--color-dark);">Dispositivo</th>
+                                    <th style="padding:0.8rem 1rem;text-align:left;color:var(--color-dark);">Descripción</th>
+                                    <th style="padding:0.8rem 1rem;text-align:left;color:var(--color-dark);">Fecha</th>
+                                    <th style="padding:0.8rem 1rem;text-align:center;color:var(--color-dark);">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="errorlog-table-body">
+                                <tr><td colspan="7" style="text-align:center;padding:2rem;color:#999;">Cargando informes...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ======================================================= -->
+    <!--  FOOTER GLOBAL — visible bajo cualquier vista           -->
+    <!-- ======================================================= -->
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-inner">
+
+            <!-- Columna 1: Marca -->
+            <div class="footer-brand">
+                <img src="img/icons/RosaDorado.png" alt="Rosa Martínez Salón de Belleza" class="footer-logo">
+                <p class="footer-tagline">Tu belleza, nuestra pasión.<br>Reserva online, disfruta sin esperas.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Instagram" class="footer-social-btn"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Facebook"  class="footer-social-btn"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="WhatsApp"  class="footer-social-btn"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+            <!-- Columna 2: Navegación -->
+            <div class="footer-col">
+                <h4 class="footer-col-title">Navegación</h4>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="app.navigateTo('landing');return false;">Inicio</a></li>
+                    <li><a href="#" onclick="app.navigateTo('facilities');return false;">Instalaciones</a></li>
+                    <li><a href="#" onclick="app.navigateTo('client-zone');return false;">Zona Clientes</a></li>
+                    <li><a href="#" onclick="app.navigateTo('contact');return false;">Contacto</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna 3: Info del salón -->
+            <div class="footer-col">
+                <h4 class="footer-col-title">El Salón</h4>
+                <ul class="footer-links footer-info">
+                    <li><i class="fas fa-map-marker-alt"></i>&nbsp;C. Rosalía de Castro, 3<br>&emsp;14120 Fuente Palmera, Córdoba</li>
+                    <li><i class="fas fa-phone-alt"></i>&nbsp;+34 600 111 222</li>
+                    <li><i class="fas fa-envelope"></i>&nbsp;info@rosamartinez.es</li>
+                    <li><i class="far fa-clock"></i>&nbsp;Mar–Vie: 10:00–19:00<br>&emsp;Sáb: 10:00–14:00</li>
+                </ul>
+            </div>
+
+            <!-- Columna 4: Legal -->
+            <div class="footer-col">
+                <h4 class="footer-col-title">Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="app.openLegal('aviso');return false;">Aviso Legal</a></li>
+                    <li><a href="#" onclick="app.openLegal('privacidad');return false;">Política de Privacidad</a></li>
+                    <li><a href="#" onclick="app.openLegal('cookies');return false;">Política de Cookies</a></li>
+                    <li><a href="#" onclick="app.openLegal('accesibilidad');return false;">Accesibilidad</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Barra inferior -->
+        <div class="footer-bottom">
+            <span>&copy; <span id="footer-year"></span> Rosa Martínez Salón de Belleza. Todos los derechos reservados.</span>
+            <span class="footer-bottom-links">
+                <a href="#" onclick="app.openLegal('aviso');return false;">Aviso Legal</a>
+                <span aria-hidden="true">&middot;</span>
+                <a href="#" onclick="app.openLegal('privacidad');return false;">Privacidad</a>
+                <span aria-hidden="true">&middot;</span>
+                <a href="#" onclick="app.openLegal('cookies');return false;">Cookies</a>
+            </span>
+        </div>
+    </footer>
+
+    <!-- ======================================================= -->
+    <!--  MODAL LEGAL (compartido para todos los textos)         -->
+    <!-- ======================================================= -->
+    <div id="legal-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="legal-modal-title">
+        <div class="modal-content" style="max-width:680px;max-height:80vh;overflow-y:auto;padding:2.5rem;position:relative;">
+            <button onclick="document.getElementById('legal-modal').classList.remove('active')"
+                    aria-label="Cerrar" class="modal-close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 id="legal-modal-title" style="color:var(--color-gold);font-family:var(--font-heading);margin-bottom:1.5rem;font-size:1.6rem;"></h2>
+            <div id="legal-modal-body" style="color:var(--color-dark-text);line-height:1.8;font-size:0.95rem;"></div>
+            <div style="text-align:center;margin-top:2rem;">
+                <button class="btn btn-primary" onclick="document.getElementById('legal-modal').classList.remove('active')">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Año dinámico
+        document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+        // Contenidos legales
+        const _legalContent = {
+            aviso: {
+                title: 'Aviso Legal',
+                body: `
+                    <!-- Cabecera identificativa -->
+                    <div style="background:var(--color-cream-dark);border-left:4px solid var(--color-gold);
+                                padding:1rem 1.2rem;border-radius:0 8px 8px 0;margin-bottom:1.4rem;">
+                        <p style="margin:0;font-size:0.82rem;color:var(--color-light-text);text-transform:uppercase;
+                                  letter-spacing:.06em;font-weight:600;">Aviso Legal · Última actualización: abril 2026</p>
+                    </div>
+
+                    <h3 style="color:var(--color-dark);margin-bottom:.6rem;">1. Datos identificativos del titular</h3>
+                    <p style="margin-bottom:.6rem;">En cumplimiento del artículo 10 de la <strong>Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y del Comercio Electrónico (LSSI-CE)</strong>, se facilitan los siguientes datos del titular del sitio web y de la aplicación <em>TuTurno</em>:</p>
+                    <table style="width:100%;border-collapse:collapse;font-size:0.88rem;margin:.6rem 0 1rem;">
+                        <tbody>
+                            <tr style="border-bottom:1px solid #eee;">
+                                <td style="padding:.55rem .8rem;font-weight:600;color:var(--color-dark);width:40%;background:var(--color-cream-dark);">Razón social / Nombre</td>
+                                <td style="padding:.55rem .8rem;">Rosa Martínez García</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #eee;">
+                                <td style="padding:.55rem .8rem;font-weight:600;color:var(--color-dark);background:var(--color-cream-dark);">Nombre comercial</td>
+                                <td style="padding:.55rem .8rem;">Rosa Martínez Salón de Belleza</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #eee;">
+                                <td style="padding:.55rem .8rem;font-weight:600;color:var(--color-dark);background:var(--color-cream-dark);">NIF / DNI</td>
+                                <td style="padding:.55rem .8rem;">45 XXX XXX-R <span style="font-size:.8rem;color:var(--color-light-text);">(dato ficticio — sustituir por el real)</span></td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #eee;">
+                                <td style="padding:.55rem .8rem;font-weight:600;color:var(--color-dark);background:var(--color-cream-dark);">IAE / CNAE</td>
+                                <td style="padding:.55rem .8rem;">9602 — Peluquería y otros tratamientos de belleza</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #eee;">
+                                <td style="padding:.55rem .8rem;font-weight:600;color:var(--color-dark);background:var(--color-cream-dark);">Domicilio social</td>
+                                <td style="padding:.55rem .8rem;">C. Rosalía de Castro, 3<br>14120 Fuente Palmera, Córdoba (España)</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #eee;">
+                                <td style="padding:.55rem .8rem;font-weight:600;color:var(--color-dark);background:var(--color-cream-dark);">Teléfono</td>
+                                <td style="padding:.55rem .8rem;">+34 600 111 222</td>
+                            </tr>
+                            <tr style="border-bottom:1px solid #eee;">
+                                <td style="padding:.55rem .8rem;font-weight:600;color:var(--color-dark);background:var(--color-cream-dark);">Correo electrónico</td>
+                                <td style="padding:.55rem .8rem;"><a href="mailto:info@rosamartinez.es" style="color:var(--color-gold);">info@rosamartinez.es</a></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:.55rem .8rem;font-weight:600;color:var(--color-dark);background:var(--color-cream-dark);">Inscripción en RETA</td>
+                                <td style="padding:.55rem .8rem;">Trabajadora por cuenta propia (autónoma) inscrita en el Régimen Especial de Trabajadores Autónomos (RETA) de la Seguridad Social</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 style="color:var(--color-dark);margin:1.4rem 0 .6rem;">2. Objeto y ámbito de aplicación</h3>
+                    <p>El presente Aviso Legal regula el acceso, navegación y uso de la <strong>aplicación web TuTurno</strong> (en adelante, «la Aplicación»), mediante la cual los usuarios pueden consultar el catálogo de servicios del salón y gestionar reservas de citas en línea. El mero acceso a la Aplicación implica la aceptación plena y sin reservas de todos los términos contenidos en este Aviso Legal.</p>
+
+                    <h3 style="color:var(--color-dark);margin:1.4rem 0 .6rem;">3. Condiciones de uso</h3>
+                    <p>El usuario se compromete a:</p>
+                    <ul style="margin:.6rem 0;padding-left:1.4rem;line-height:2.1;">
+                        <li>Hacer un uso lícito, honesto y correcto de la Aplicación.</li>
+                        <li>No realizar actividades fraudulentas, ilegales o contrarias a la buena fe.</li>
+                        <li>Proporcionar información veraz y actualizada al registrarse o realizar una reserva.</li>
+                        <li>No suplantar la identidad de otros usuarios ni del personal del salón.</li>
+                        <li>No intentar acceder a secciones de la Aplicación restringidas a otros roles mediante ingeniería inversa u otras técnicas.</li>
+                    </ul>
+                    <p>El titular se reserva el derecho de suspender o cancelar el acceso de cualquier usuario que incumpla estas condiciones, sin necesidad de preaviso.</p>
+
+                    <h3 style="color:var(--color-dark);margin:1.4rem 0 .6rem;">4. Propiedad intelectual e industrial</h3>
+                    <p>Todos los contenidos de la Aplicación —incluyendo, sin limitarse a, textos, fotografías, ilustraciones, logotipos, iconos, código fuente, diseño gráfico y estructura— son propiedad de <strong>Rosa Martínez García</strong> o de sus proveedores, y están protegidos por la legislación española e internacional sobre <strong>propiedad intelectual e industrial</strong> (Real Decreto Legislativo 1/1996, Ley de Marcas 17/2001 y demás normativa aplicable).</p>
+                    <p>Queda expresamente prohibida la reproducción, distribución, comunicación pública o transformación de cualquier contenido sin la autorización previa y por escrito del titular, salvo en los casos expresamente previstos por la ley.</p>
+
+                    <h3 style="color:var(--color-dark);margin:1.4rem 0 .6rem;">5. Exclusión de garantías y responsabilidad</h3>
+                    <p>El titular no garantiza la disponibilidad ininterrumpida de la Aplicación y no se responsabiliza de:</p>
+                    <ul style="margin:.6rem 0;padding-left:1.4rem;line-height:2.1;">
+                        <li>Daños o perjuicios de cualquier tipo derivados del acceso o uso de la Aplicación.</li>
+                        <li>Errores u omisiones en los contenidos de la Aplicación.</li>
+                        <li>La presencia de virus u otros elementos dañinos introducidos por terceros.</li>
+                        <li>Interrupciones del servicio por causas de fuerza mayor o fallos en las redes externas.</li>
+                    </ul>
+
+                    <h3 style="color:var(--color-dark);margin:1.4rem 0 .6rem;">6. Política de cancelación de reservas</h3>
+                    <p>Las reservas realizadas a través de la Aplicación podrán cancelarse sin cargo con un mínimo de <strong>24 horas de antelación</strong>. Las cancelaciones tardías o ausencias reiteradas podrán conllevar restricciones de uso, a criterio del salón.</p>
+
+                    <h3 style="color:var(--color-dark);margin:1.4rem 0 .6rem;">7. Modificaciones del Aviso Legal</h3>
+                    <p>El titular se reserva el derecho de modificar el presente Aviso Legal en cualquier momento. Los cambios entrarán en vigor desde su publicación en la Aplicación. Se recomienda revisar periódicamente este documento.</p>
+
+                    <h3 style="color:var(--color-dark);margin:1.4rem 0 .6rem;">8. Ley aplicable y jurisdicción</h3>
+                    <p>Las relaciones entre el titular y los usuarios de la Aplicación se regirán por la <strong>legislación española vigente</strong>. Para la resolución de cualquier controversia, las partes, con renuncia expresa a cualquier otro fuero que pudiera corresponderles, se someten a la jurisdicción de los <strong>Juzgados y Tribunales de Córdoba (España)</strong>.</p>
+
+                    <div style="margin-top:1.6rem;padding:.9rem 1rem;background:#f8f9fa;border-radius:8px;
+                                font-size:0.82rem;color:var(--color-light-text);border:1px solid #eee;">
+                        <i class="fas fa-info-circle" style="color:var(--color-gold);margin-right:.4rem;"></i>
+                        Este documento tiene carácter meramente informativo dentro de un proyecto académico (TFG DAM). Los datos de NIF y registro son ficticios.
+                    </div>`
+            },
+
+            privacidad: {
+                title: 'Política de Privacidad',
+                body: `<h3 style="color:var(--color-dark);margin-bottom:.5rem;">1. Responsable del tratamiento</h3>
+                    <p>Rosa Martínez Salón de Belleza — info@rosamartinez.es</p>
+                    <h3 style="color:var(--color-dark);margin:1.2rem 0 .5rem;">2. Datos recogidos</h3>
+                    <ul style="margin:.8rem 0;padding-left:1.4rem;line-height:2;">
+                        <li>Nombre, correo electrónico (registro de cuenta).</li>
+                        <li>Historial de citas y servicios.</li>
+                        <li>Datos técnicos de acceso (IP, navegador) con fines de seguridad.</li>
+                    </ul>
+                    <h3 style="color:var(--color-dark);margin:1.2rem 0 .5rem;">3. Finalidad y base jurídica</h3>
+                    <p>(a) Prestar el servicio de reserva — <em>ejecución de contrato</em>. (b) Avisos sobre citas — <em>interés legítimo</em>. (c) Cumplir obligaciones legales.</p>
+                    <h3 style="color:var(--color-dark);margin:1.2rem 0 .5rem;">4. Conservación</h3>
+                    <p>Datos activos mientras la cuenta esté vigente; conservados según plazos legales tras su cancelación.</p>
+                    <h3 style="color:var(--color-dark);margin:1.2rem 0 .5rem;">5. Tus derechos (RGPD)</h3>
+                    <p>Acceso, rectificación, supresión, oposición, limitación y portabilidad. Escribe a info@rosamartinez.es o reclama en <strong>aepd.es</strong>.</p>
+                    <h3 style="color:var(--color-dark);margin:1.2rem 0 .5rem;">6. Cesión</h3>
+                    <p>No cedemos datos a terceros salvo obligación legal. Sin transferencias internacionales.</p>`
+            },
+            cookies: {
+                title: 'Política de Cookies',
+                body: `<h3 style="color:var(--color-dark);margin-bottom:.5rem;">¿Qué son las cookies?</h3>
+                    <p>Pequeños ficheros de texto que los sitios web almacenan en el dispositivo del usuario.</p>
+                    <h3 style="color:var(--color-dark);margin:1.2rem 0 .5rem;">Cookies que utilizamos</h3>
+                    <table style="width:100%;border-collapse:collapse;font-size:0.85rem;margin:.8rem 0;">
+                        <thead><tr style="background:var(--color-cream-dark);">
+                            <th style="padding:.5rem .7rem;text-align:left;border-bottom:2px solid var(--color-gold);">Nombre</th>
+                            <th style="padding:.5rem .7rem;text-align:left;border-bottom:2px solid var(--color-gold);">Tipo</th>
+                            <th style="padding:.5rem .7rem;text-align:left;border-bottom:2px solid var(--color-gold);">Finalidad</th>
+                        </tr></thead>
+                        <tbody>
+                            <tr style="border-bottom:1px solid #eee;"><td style="padding:.5rem .7rem;">auth_token</td><td style="padding:.5rem .7rem;">Técnica</td><td style="padding:.5rem .7rem;">Mantener la sesión activa</td></tr>
+                            <tr style="border-bottom:1px solid #eee;"><td style="padding:.5rem .7rem;">auth_role</td><td style="padding:.5rem .7rem;">Técnica</td><td style="padding:.5rem .7rem;">Rol del usuario autenticado</td></tr>
+                            <tr style="border-bottom:1px solid #eee;"><td style="padding:.5rem .7rem;">auth_hasSeenGuide</td><td style="padding:.5rem .7rem;">Funcional</td><td style="padding:.5rem .7rem;">Recordar visita a la guía interactiva</td></tr>
+                            <tr><td style="padding:.5rem .7rem;">error_reports</td><td style="padding:.5rem .7rem;">Funcional</td><td style="padding:.5rem .7rem;">Copia local de informes enviados</td></tr>
+                        </tbody>
+                    </table>
+                    <p>Estas cookies son <strong>técnicas y funcionales</strong>; sin ellas la app no funciona correctamente. No usamos cookies de publicidad ni analítica de terceros.</p>
+                    <p style="margin-top:.8rem;">Puedes eliminarlas desde la configuración de tu navegador, aunque puede afectar al funcionamiento.</p>`
+            },
+            accesibilidad: {
+                title: 'Declaración de Accesibilidad',
+                body: `<h3 style="color:var(--color-dark);margin-bottom:.5rem;">Compromiso</h3>
+                    <p>Rosa Martínez Salón de Belleza se compromete con la accesibilidad conforme al Real Decreto 1112/2018 y las WCAG 2.1 nivel AA.</p>
+                    <h3 style="color:var(--color-dark);margin:1.2rem 0 .5rem;">Medidas adoptadas</h3>
+                    <ul style="margin:.8rem 0;padding-left:1.4rem;line-height:2;">
+                        <li>HTML semántico y roles ARIA en elementos interactivos.</li>
+                        <li>Contraste de color ≥ 4.5:1 entre texto y fondo.</li>
+                        <li>Texto alternativo en todas las imágenes informativas.</li>
+                        <li>Navegación por teclado en formularios y modales.</li>
+                        <li>Diseño responsive para móvil y tablet.</li>
+                    </ul>
+                    <h3 style="color:var(--color-dark);margin:1.2rem 0 .5rem;">Limitaciones conocidas</h3>
+                    <p>El calendario interactivo puede presentar dificultades con lectores de pantalla. Estamos trabajando en mejorarlo.</p>
+                    <h3 style="color:var(--color-dark);margin:1.2rem 0 .5rem;">Contacto</h3>
+                    <p>Incidencias de accesibilidad: <strong>info@rosamartinez.es</strong>. Respuesta en máx. 2 días hábiles.</p>`
+            }
+    </script>
+
+
+    <div id="toast-container" class="toast-container"></div>
+
+
+    <script src="app.js"></script>
+    <script src="auth.js"></script>
+    <script src="client.js"></script>
+    <script src="booking.js"></script>
+    <script src="admin.js"></script>
+    <script src="superadmin.js"></script>
+    <script src="errors.js"></script>
+    <script src="guide.js"></script>
+    <script src="guide_admin.js"></script>
+
+    <!-- Asignación de app.openLegal DESPUÉS de que app.js haya cargado -->
+    <script>
+        app.openLegal = function(key) {
+            const c = _legalContent[key];
+            if (!c) return;
+            document.getElementById('legal-modal-title').textContent = c.title;
+            document.getElementById('legal-modal-body').innerHTML  = c.body;
+            document.getElementById('legal-modal').classList.add('active');
+        };
+        document.getElementById('legal-modal').addEventListener('click', function(e) {
+            if (e.target === this) this.classList.remove('active');
+        });
+    </script>
+
+    <div id="register-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Éndate un momento ✨</h3>
+            <p>Para ver nuestra disponibilidad y confirmar tu cita necesitas una cuenta. ¡Es rápido, sencillo y completamente gratis!</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="document.getElementById('register-modal').classList.remove('active')">Ahora no</button>
+                <button class="btn btn-primary" onclick="document.getElementById('register-modal').classList.remove('active'); app.navigateTo('auth'); app.switchAuthTab('register');">Crear mi cuenta</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-cita-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 800px; padding: 2rem;">
+            <h3 id="admin-cita-modal-title" style="text-align: center; color: var(--color-gold); margin-bottom: 1.5rem;">Añadir Nueva Cita</h3>
+            <form id="adminCitaForm" onsubmit="event.preventDefault(); app.admin.saveCita();">
+                <input type="hidden" id="admin-cita-id">
+                
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                    <div class="input-group" style="flex: 1; margin: 0;">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="admin-cita-userSearch" list="admin-clients-list" placeholder="Cliente (Nombre o ID)" required style="width: 100%; padding: 1rem 1rem 1rem 3rem; border: 1px solid #eee; border-radius: var(--border-radius); font-family: inherit; font-size:1rem; background-color: #fafafa;" autocomplete="off">
+                        <datalist id="admin-clients-list">
+                            <!-- Clientes cargados por JS -->
+                        </datalist>
+                    </div>
+                    
+                    <div class="input-group" style="flex: 1; margin: 0;">
+                        <i class="fas fa-spa"></i>
+                        <select id="admin-cita-servicioId" onchange="app.admin.onModalServiceChange()" required style="width: 100%; padding: 1rem 1rem 1rem 3rem; border: 1px solid #eee; border-radius: var(--border-radius); font-family: var(--font-body); font-size: 1rem; background-color: #fafafa; appearance: none;">
+                            <option value="">Selecciona un Servicio...</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- LAYOUT DE CALENDARIO PREMIUM IDENTICO AL CLIENTE -->
+                <div class="step-2-layout" style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start; justify-content: center;">
+                    <div class="calendar-wrapper" style="flex: 1; min-width: 250px; max-width: 350px;">
+                        <div class="calendar-controls">
+                            <button type="button" class="btn btn-outline btn-small" onclick="app.admin.changeModalMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                            <h5 id="admin-modal-month-year">Cargando...</h5>
+                            <button type="button" class="btn btn-outline btn-small" onclick="app.admin.changeModalMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+
+                        <div class="calendar-grid" id="admin-modal-calendar-grid">
+                            <div class="cal-header">Lun</div>
+                            <div class="cal-header">Mar</div>
+                            <div class="cal-header">Mié</div>
+                            <div class="cal-header">Jue</div>
+                            <div class="cal-header">Vie</div>
+                            <div class="cal-header">Sáb</div>
+                            <div class="cal-header">Dom</div>
+                        </div>
+                    </div>
+                    
+                    <div id="admin-modal-slots-container" class="time-slots hidden" style="flex: 1; min-width: 250px; border-left: 2px solid var(--color-cream-dark); padding-left: 1rem;">
+                        <h5 style="margin-bottom: 1rem; color: var(--color-dark);">Horas para el <span id="admin-modal-date-text" style="color:var(--color-gold);"></span></h5>
+                        <div id="admin-modal-slots-grid" class="slots-grid">
+                            <p class="empty-state">Selecciona una fecha para buscar hora.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions" style="margin-top: 2rem; justify-content: center; gap: 1rem;">
+                    <button type="button" class="btn btn-outline" onclick="document.getElementById('admin-cita-modal').classList.remove('active')" style="min-width: 150px;">Atrás</button>
+                    <button type="submit" id="btn-admin-modal-submit" class="btn btn-primary" style="min-width: 150px;" disabled>Guardar Cita</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL SUPERADMIN PARA USUARIOS -->
+    <div id="superadmin-user-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px; padding: 2rem;">
+            <h3 id="superadmin-user-modal-title" style="text-align: center; color: var(--color-gold); margin-bottom: 1.5rem;">Añadir Usuario</h3>
+            <form id="superadminUserForm" onsubmit="event.preventDefault(); app.superadmin.saveUser();">
+                <input type="hidden" id="sa-user-id">
+                
+                <div class="input-group" style="margin-bottom: 1rem;">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="sa-user-name" placeholder="Nombre completo" required style="width: 100%; padding: 1rem 1rem 1rem 3rem; border: 1px solid #eee; border-radius: var(--border-radius); background-color: #fafafa;">
+                </div>
+                
+                <div class="input-group" style="margin-bottom: 1rem;">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="sa-user-email" placeholder="Correo electrónico" required style="width: 100%; padding: 1rem 1rem 1rem 3rem; border: 1px solid #eee; border-radius: var(--border-radius); background-color: #fafafa;">
+                </div>
+
+                <div class="input-group" style="margin-bottom: 1rem;">
+                    <i class="fas fa-phone"></i>
+                    <input type="tel" id="sa-user-phone" placeholder="Teléfono" required style="width: 100%; padding: 1rem 1rem 1rem 3rem; border: 1px solid #eee; border-radius: var(--border-radius); background-color: #fafafa;">
+                </div>
+
+                <div class="input-group" style="margin-bottom: 1rem;">
+                    <i class="fas fa-key"></i>
+                    <select id="sa-user-role" required style="width: 100%; padding: 1rem 1rem 1rem 3rem; border: 1px solid #eee; border-radius: var(--border-radius); background-color: #fafafa; appearance:none;">
+                        <option value="cliente">Cliente</option>
+                        <option value="jefe">Jefe</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions" style="margin-top: 2rem; justify-content: center; gap: 1rem;">
+                    <button type="button" class="btn btn-outline" onclick="document.getElementById('superadmin-user-modal').classList.remove('active')" style="min-width: 120px;">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="min-width: 120px;">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: REPORTAR ERROR (Clientes) -->
+    <div id="error-report-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width:500px;padding:2rem;">
+            <h3 style="text-align:center;color:var(--color-gold);margin-bottom:0.5rem;"><i class="fas fa-bug"></i> Reportar un Error</h3>
+            <p style="text-align:center;color:var(--color-light-text);font-size:0.9rem;margin-bottom:1.5rem;">Ayúdanos a mejorar describiéndonos qué ha fallado.</p>
+            <form id="errorReportForm" onsubmit="event.preventDefault(); app.errorReport.submit();">
+                <div class="input-group" style="margin-bottom:1rem;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <select id="er-type" required style="width:100%;padding:1rem 1rem 1rem 3rem;border:1px solid #eee;border-radius:var(--border-radius);background:#fafafa;font-family:inherit;font-size:0.95rem;appearance:none;">
+                        <option value="">¿Qué tipo de error ha ocurrido?</option>
+                        <!-- Opciones inyectadas por errors.js -->
+                    </select>
+                </div>
+                <div class="input-group" style="margin-bottom:1rem;">
+                    <i class="fas fa-laptop"></i>
+                    <select id="er-device" required style="width:100%;padding:1rem 1rem 1rem 3rem;border:1px solid #eee;border-radius:var(--border-radius);background:#fafafa;font-family:inherit;font-size:0.95rem;appearance:none;">
+                        <option value="">¿Con qué dispositivo accedías?</option>
+                        <!-- Opciones inyectadas por errors.js -->
+                    </select>
+                </div>
+                <div style="margin-bottom:1.5rem;">
+                    <textarea id="er-description" placeholder="Describe brevemente qué estabas haciendo cuando ocurrió el error..." required rows="4"
+                        style="width:100%;padding:0.9rem 1rem;border:1px solid #eee;border-radius:var(--border-radius);font-family:inherit;font-size:0.9rem;resize:vertical;background:#fafafa;"></textarea>
+                </div>
+                <div class="modal-actions" style="justify-content:center;gap:1rem;">
+                    <button type="button" class="btn btn-outline" onclick="document.getElementById('error-report-modal').classList.remove('active')" style="min-width:120px;">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="min-width:120px;">Enviar Informe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <button id="global-help-fab" class="fab-help-btn" onclick="if(app.state.userRole === 'admin') { if(app.startAdminGuide) app.startAdminGuide(); } else if(app.state.userRole === 'jefe') { if(app.startAdminGuide) app.startAdminGuide(); } else { if(app.startGuide) app.startGuide(); }" style="display: none; position: fixed; bottom: 30px; right: 30px; border-radius: 30px; padding: 12px 24px; background: var(--color-gold); color: white; border: none; box-shadow: 0 8px 20px rgba(212,175,55,0.4); font-size: 1.05rem; font-weight: 600; cursor: pointer; justify-content: center; align-items: center; gap: 8px; z-index: 9000; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;">
+        <i class="fas fa-magic"></i> Guía Interactiva
+    </button>
+    <style>
+        .fab-help-btn:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 12px 25px rgba(212,175,55,0.6) !important;
+        }
+    </style>
+</body>
+</html>

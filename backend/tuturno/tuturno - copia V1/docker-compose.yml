@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: tuturno_db_container
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=tuturno_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  postgres_data:
