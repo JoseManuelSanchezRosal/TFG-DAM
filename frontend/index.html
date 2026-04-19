@@ -167,17 +167,29 @@
         </section>
 
         <section id="view-facilities" class="view fade-in">
-            <div class="crown-box bg-white">
+            <div class="facilities-wrapper-full">
                 <div class="dashboard-header text-center" style="margin-bottom: 3rem;">
-                <h2 style="text-align: center;">Nuestras Instalaciones</h2>
-                <p style="text-align: center;" class="text-muted">Un espacio diseñado para tu bienestar en pleno centro.</p>
-            </div>
-            <div class="facilities-grid">
-                <div class="facility-card"><img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&q=80" alt="Salón Principal"></div>
-                <div class="facility-card"><img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=600&q=80" alt="Zona de Lavado"></div>
-                <div class="facility-card"><img src="https://images.unsplash.com/photo-1516975080661-46b0854d6fa7?auto=format&fit=crop&w=600&q=80" alt="Estética"></div>
-                <div class="facility-card"><img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=600&q=80" alt="Manicura"></div>
-            </div>
+                    <h2 style="text-align: center; color: var(--color-dark); font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: 700;">Nuestras Instalaciones</h2>
+                    <p style="text-align: center; color: var(--color-light-text); font-size: 1.1rem; max-width: 700px; margin: 0 auto;">Explora cada rincón de nuestro salón, un espacio diseñado en su totalidad para tu confort, exclusividad y bienestar.</p>
+                </div>
+                <div class="facilities-masonry">
+                    <div class="masonry-item" onclick="app.gallery.open(0)"><img src="img/Fachada.jpg" alt="Fachada" loading="lazy"></div>
+                    <div class="masonry-item" onclick="app.gallery.open(1)"><img src="img/MesaSillon.jpg" alt="Mesa y Sillón" loading="lazy"></div>
+                    <div class="masonry-item" onclick="app.gallery.open(2)"><img src="img/MesaSillonLampara.jpg" alt="Mesa, Sillón y Lámpara" loading="lazy"></div>
+                    <div class="masonry-item" onclick="app.gallery.open(3)"><img src="img/Alas.jpg" alt="Alas" loading="lazy"></div>
+                    <div class="masonry-item" onclick="app.gallery.open(4)"><img src="img/AlaSillas.jpg" alt="Decoración Ala con Sillas" loading="lazy"></div>
+                    <div class="masonry-item" onclick="app.gallery.open(5)"><img src="img/Sillas.jpg" alt="Sillas" loading="lazy"></div>
+                    <div class="masonry-item" onclick="app.gallery.open(6)"><img src="img/SillaPeques.jpg" alt="Silla Infantil" loading="lazy"></div>
+                    <div class="masonry-item" onclick="app.gallery.open(7)"><img src="img/Mostrador.jpg" alt="Mostrador" loading="lazy"></div>
+                    <div class="masonry-item" onclick="app.gallery.open(8)"><img src="img/Lavacabezas.jpg" alt="Lavacabezas" loading="lazy"></div>
+                    <div class="masonry-item" onclick="app.gallery.open(9)"><img src="img/CuartoDepilacion.jpg" alt="Cuarto de Depilación" loading="lazy"></div>
+                    <div class="masonry-item" onclick="app.gallery.open(10)"><img src="img/CuartoNoviasLejos.jpg" alt="Cuarto de Novias - Vista Lejos" loading="lazy"></div>
+                    <div class="masonry-item" onclick="app.gallery.open(11)"><img src="img/CuartoNoviasCerca.jpg" alt="Cuarto de Novias - Detalle" loading="lazy"></div>
+                    <div class="masonry-item" onclick="app.gallery.open(12)"><img src="img/CuartoNoviasVentana.jpg" alt="Cuarto de Novias con Ventana" loading="lazy"></div>
+                    <div class="masonry-item" onclick="app.gallery.open(13)"><img src="img/Manicura.jpg" alt="Manicura" loading="lazy"></div>
+                    <div class="masonry-item" onclick="app.gallery.open(14)"><img src="img/Patio.jpg" alt="Patio" loading="lazy"></div>
+                    <div class="masonry-item" onclick="app.gallery.open(15)"><img src="img/TarjetaRegalo.jpg" alt="Tarjeta Regalo" loading="lazy"></div>
+                </div>
             </div>
         </section>
 
@@ -699,6 +711,18 @@
                     Entendido
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!--  LIGHTBOX GALLERY MODAL                                 -->
+    <!-- ======================================================= -->
+    <div id="lightbox-overlay" class="lightbox-overlay" role="dialog" aria-modal="true" aria-label="Visor de imágenes">
+        <button class="lightbox-close" onclick="app.gallery.close()" aria-label="Cerrar ventana"><i class="fas fa-times"></i></button>
+        <button class="lightbox-nav lightbox-prev" onclick="app.gallery.prev()" aria-label="Imagen anterior"><i class="fas fa-chevron-left"></i></button>
+        <button class="lightbox-nav lightbox-next" onclick="app.gallery.next()" aria-label="Siguiente imagen"><i class="fas fa-chevron-right"></i></button>
+        <div class="lightbox-content">
+            <img id="lightbox-img" class="lightbox-img" src="" alt="Imagen ampliada">
         </div>
     </div>
 

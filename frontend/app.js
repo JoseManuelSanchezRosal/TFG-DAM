@@ -121,8 +121,9 @@ const app = {
                 document.getElementById('my-appointments-card').style.display = 'block';
                 if(clientGrid) clientGrid.classList.add('logged-in-grid');
                 if(app.client) app.client.initAuthClient();
-                if (!app.state.hasSeenGuide && app.startGuide && !app.guideActive) {
-                    setTimeout(() => app.startGuide(), 500);
+                if ((app.state.justRegistered || !app.state.hasSeenGuide) && app.startGuide && !app.guideActive) {
+                    app.state.justRegistered = false; // Consumir flag
+                    setTimeout(() => app.startGuide(), 700); // Dar holgura a renderServices()
                 }
             } else {
                 document.getElementById('client-logged-in-header').style.display = 'none';
@@ -153,6 +154,10 @@ const app = {
             // El FAB siempre visible para el jefe (no depende de hasSeenGuide)
             const fab = document.getElementById('global-help-fab');
             if (fab) fab.style.display = 'flex';
+
+            if (!app.state.hasSeenGuide && app.startAdminGuide && !app.adminGuideActive) {
+                setTimeout(() => app.startAdminGuide(), 500);
+            }
         } else {
             this.navigateTo('client-zone');
         }
@@ -248,6 +253,48 @@ const app = {
                 { id: 3, nombre: "Tratamiento Facial", descripcion: "Limpieza e hidratación", precio: 40.0, duracionMinutos: 60 }
             ];
             return this.state.services;
+        }
+    },
+
+    // ======== GALLERY LIGHTBOX ========
+    gallery: {
+        images: [
+            "img/Fachada.jpg", "img/MesaSillon.jpg", "img/MesaSillonLampara.jpg",
+            "img/Alas.jpg", "img/AlaSillas.jpg", "img/Sillas.jpg", "img/SillaPeques.jpg",
+            "img/Mostrador.jpg", "img/Lavacabezas.jpg", "img/CuartoDepilacion.jpg",
+            "img/CuartoNoviasLejos.jpg", "img/CuartoNoviasCerca.jpg", "img/CuartoNoviasVentana.jpg",
+            "img/Manicura.jpg", "img/Patio.jpg", "img/TarjetaRegalo.jpg"
+        ],
+        currentIndex: 0,
+        open: function(index) {
+            this.currentIndex = index;
+            const overlay = document.getElementById('lightbox-overlay');
+            const img = document.getElementById('lightbox-img');
+            img.src = this.images[this.currentIndex];
+            overlay.classList.add('active');
+            
+            // Atajos de teclado
+            this.keydownListener = (e) => {
+                if (e.key === 'Escape') this.close();
+                if (e.key === 'ArrowRight') this.next();
+                if (e.key === 'ArrowLeft') this.prev();
+            };
+            document.addEventListener('keydown', this.keydownListener);
+        },
+        close: function() {
+            const overlay = document.getElementById('lightbox-overlay');
+            if (overlay) overlay.classList.remove('active');
+            if (this.keydownListener) {
+                document.removeEventListener('keydown', this.keydownListener);
+            }
+        },
+        next: function() {
+            this.currentIndex = (this.currentIndex + 1) % this.images.length;
+            document.getElementById('lightbox-img').src = this.images[this.currentIndex];
+        },
+        prev: function() {
+            this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+            document.getElementById('lightbox-img').src = this.images[this.currentIndex];
         }
     }
 };

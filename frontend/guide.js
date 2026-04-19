@@ -3,6 +3,10 @@ app.startGuide = function() {
     app.guideActive = true;
     app.guideStep = 1;
 
+    // Marcar como vista inmediatamente para que no reaparezca tras el siguiente login
+    app.state.hasSeenGuide = true;
+    localStorage.setItem(`auth_hasSeenGuide_${app.state.userEmail}`, "true");
+
     const styleId = 'guide-animations-style';
     if (!document.getElementById(styleId)) {
         const style = document.createElement('style');

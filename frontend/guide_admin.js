@@ -3,6 +3,10 @@ app.startAdminGuide = function() {
     app.adminGuideActive = true;
     app.adminGuideStep = 1;
 
+    // Marcar como vista inmediatamente para que no reaparezca tras el siguiente login
+    app.state.hasSeenGuide = true;
+    localStorage.setItem(`auth_hasSeenGuide_${app.state.userEmail}`, "true");
+
     // ── Estilos de animación ──────────────────────────────────────────────────
     const styleId = 'guide-admin-animations-style';
     if (!document.getElementById(styleId)) {

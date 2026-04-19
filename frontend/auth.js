@@ -41,8 +41,12 @@ app.login = async function() {
                 app.state.userName = email.split('@')[0];
                 app.state.userId = Math.floor(Math.random() * 10) + 1; 
                 
-                const localGuideSeen = localStorage.getItem(`auth_hasSeenGuide_${email}`) === "true";
-                app.state.hasSeenGuide = localGuideSeen || (data.hasSeenGuide === true);
+                let localGuideRaw = localStorage.getItem(`auth_hasSeenGuide_${email}`);
+                if (localGuideRaw === null) {
+                    app.state.hasSeenGuide = false;
+                } else {
+                    app.state.hasSeenGuide = localGuideRaw === "true" || (data.hasSeenGuide === true);
+                }
 
                 localStorage.setItem("auth_token", app.state.token);
                 localStorage.setItem("auth_role", app.state.userRole);
@@ -81,6 +85,11 @@ app.register = async function() {
 
         if (response.ok) {
             app.showToast("¡Tu cuenta ha sido creada con éxito! Ya puedes acceder.", "success");
+            
+            // Forzar que el tutorial aparezca sí o sí limpiando basuras locales
+            localStorage.removeItem(`auth_hasSeenGuide_${email}`);
+            app.state.justRegistered = true;
+
             app.switchAuthTab('login');
             document.getElementById("login-email").value = email;
         } else {
