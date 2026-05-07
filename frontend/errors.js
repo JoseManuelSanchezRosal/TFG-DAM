@@ -83,34 +83,32 @@ app.errorReport = {
         const deviceType = DEVICE_TYPES.find(d => d.value === deviceVal);
 
         const report = {
-            id:          Date.now(),
-            date:        new Date().toLocaleString('es-ES'),
             userEmail:   app.state.userEmail || 'Anónimo',
             userName:    app.state.userName  || 'Anónimo',
-            type:        typeVal,
-            typeLabel:   errorType?.label   || typeVal,
-            severity:    errorType?.severity || 'moderado',
-            device:      deviceVal,
-            deviceLabel: deviceType?.label  || deviceVal,
-            description: desc,
-            status:      'pendiente'
+            tipo:        typeVal,
+            tipoLabel:   errorType?.label   || typeVal,
+            severidad:   errorType?.severity || 'moderado',
+            dispositivo: deviceVal,
+            dispositivoLabel: deviceType?.label  || deviceVal,
+            descripcion: desc
         };
 
-        // Intentar enviar al backend; siempre guardar local como respaldo
         try {
-            await fetch(`${API_URL}/errores`, {
+            const resp = await fetch(`${API_URL}/errores`, {
                 method: 'POST',
                 headers: app.getAuthHeaders(),
                 body: JSON.stringify(report)
             });
-        } catch(_) {}
-
-        const existing = JSON.parse(localStorage.getItem('error_reports') || '[]');
-        existing.unshift(report);
-        localStorage.setItem('error_reports', JSON.stringify(existing));
-
-        document.getElementById('error-report-modal').classList.remove('active');
-        app.showToast('✅ Informe enviado. ¡Gracias por ayudarnos a mejorar!', 'success');
+            if (resp.ok) {
+                document.getElementById('error-report-modal').classList.remove('active');
+                app.showToast('✅ Informe enviado. ¡Gracias por ayudarnos a mejorar!', 'success');
+            } else {
+                app.showToast('❌ Ocurrió un error al enviar el informe. Inténtalo más tarde.', 'error');
+            }
+        } catch(error) {
+            console.error("Error enviando reporte:", error);
+            app.showToast('❌ Error de conexión al enviar el informe.', 'error');
+        }
     }
 };
 
@@ -124,22 +122,32 @@ app.errorLog = {
     },
 
     loadReports: async function() {
-        // Intentar cargar desde backend; si falla, usar localStorage
         try {
             const resp = await fetch(`${API_URL}/errores`, { headers: app.getAuthHeaders() });
             if (resp.ok) {
-                this.reports = await resp.json();
+                const data = await resp.json();
+                this.reports = data.map(r => ({
+                    id: r.id,
+                    date: r.fecha ? new Date(r.fecha).toLocaleString('es-ES') : 'Desconocida',
+                    userEmail: r.userEmail,
+                    userName: r.userName,
+                    type: r.tipo,
+                    typeLabel: r.tipoLabel,
+                    severity: r.severidad,
+                    device: r.dispositivo,
+                    deviceLabel: r.dispositivoLabel,
+                    description: r.descripcion,
+                    status: r.estado
+                }));
             } else {
-                this.reports = JSON.parse(localStorage.getItem('error_reports') || '[]');
+                console.warn("Error al cargar reportes de errores del servidor");
+                this.reports = [];
+                app.showToast('Error al cargar la lista de errores.', 'error');
             }
-        } catch(_) {
-            this.reports = JSON.parse(localStorage.getItem('error_reports') || '[]');
-        }
-
-        // Si no hay datos reales, añadir ejemplos de demostración
-        if (this.reports.length === 0) {
-            this.reports = this._mockReports();
-            localStorage.setItem('error_reports', JSON.stringify(this.reports));
+        } catch(error) {
+            console.error("Error cargando reportes:", error);
+            this.reports = [];
+            app.showToast('Error de conexión al cargar reportes.', 'error');
         }
 
         this.filteredReports = [...this.reports];
@@ -177,20 +185,42 @@ app.errorLog = {
         set('el-stat-leve',     all.filter(r => r.severity === 'leve').length);
     },
 
-    markResolved: function(id) {
-        const r = this.reports.find(x => x.id == id);
-        if (r) {
-            r.status = r.status === 'resuelto' ? 'pendiente' : 'resuelto';
-            localStorage.setItem('error_reports', JSON.stringify(this.reports));
-            this.filter();
+    markResolved: async function(id) {
+        try {
+            const resp = await fetch(`${API_URL}/errores/${id}/estado`, {
+                method: 'PUT',
+                headers: app.getAuthHeaders()
+            });
+            if (resp.ok) {
+                app.showToast('Estado del reporte actualizado', 'success');
+                this.loadReports();
+            } else {
+                app.showToast('Error al actualizar el estado', 'error');
+            }
+        } catch(error) {
+            console.error("Error al actualizar estado:", error);
+            app.showToast('Error de conexión', 'error');
         }
     },
 
-    deleteReport: function(id) {
+    deleteReport: async function(id) {
         if (!confirm('¿Eliminar este informe?')) return;
-        this.reports = this.reports.filter(x => x.id != id);
-        localStorage.setItem('error_reports', JSON.stringify(this.reports));
-        this.filter();
+        
+        try {
+            const resp = await fetch(`${API_URL}/errores/${id}`, {
+                method: 'DELETE',
+                headers: app.getAuthHeaders()
+            });
+            if (resp.ok) {
+                app.showToast('Reporte eliminado', 'success');
+                this.loadReports();
+            } else {
+                app.showToast('Error al eliminar el reporte', 'error');
+            }
+        } catch(error) {
+            console.error("Error eliminando reporte:", error);
+            app.showToast('Error de conexión', 'error');
+        }
     },
 
     renderTable: function() {
@@ -242,20 +272,5 @@ app.errorLog = {
                 </td>
             </tr>`;
         }).join('');
-    },
-
-    _mockReports: function() {
-        const now = new Date();
-        const fmt = (d) => d.toLocaleString('es-ES');
-        const ago = (m) => { const d = new Date(now); d.setMinutes(d.getMinutes()-m); return fmt(d); };
-        return [
-            { id: 1001, date: ago(5),   userEmail:'maria@test.com',    userName:'María',   type:'login_fail',    typeLabel:'No puedo iniciar sesión',            severity:'critico',  device:'mobile_ios',    deviceLabel:'Móvil — iPhone',         description:'Introduzco mi contraseña correctamente y me dice que es incorrecta.', status:'pendiente' },
-            { id: 1002, date: ago(22),  userEmail:'pepito@test.com',   userName:'Pepito',  type:'booking_fail',  typeLabel:'Error al confirmar una reserva',      severity:'critico',  device:'pc_windows',    deviceLabel:'Ordenador — Windows',    description:'Pulso "Reservar mi cita" y la página da error 500 sin confirmar.', status:'pendiente' },
-            { id: 1003, date: ago(60),  userEmail:'ester@test.com',    userName:'Ester',   type:'calendar_fail', typeLabel:'El calendario no responde',           severity:'moderado', device:'mobile_android', deviceLabel:'Móvil — Android',        description:'Al intentar cambiar el mes el calendario se queda cargando indefinidamente.', status:'revisado' },
-            { id: 1004, date: ago(120), userEmail:'josema@test.com',   userName:'Jose',    type:'slow_app',      typeLabel:'La aplicación va muy lenta',         severity:'leve',     device:'tablet_ios',    deviceLabel:'Tablet — iPad',           description:'Desde by wifi de trabajo la app tarda más de 10 segundos en cargar.', status:'pendiente' },
-            { id: 1005, date: ago(200), userEmail:'maria@test.com',    userName:'María',   type:'ui_broken',     typeLabel:'Diseño roto / Visualización',        severity:'leve',     device:'pc_mac',        deviceLabel:'Ordenador — Mac',         description:'En Safari el calendario de citas se ve cortado por la derecha.', status:'resuelto' },
-            { id: 1006, date: ago(350), userEmail:'ester2@test.com',   userName:'Ester2',  type:'slot_error',    typeLabel:'Horarios disponibles incorrectos',   severity:'moderado', device:'pc_windows',    deviceLabel:'Ordenador — Windows',    description:'Aparece disponibilidad el domingo pero el salón está cerrado.', status:'pendiente' },
-            { id: 1007, date: ago(500), userEmail:'ester3@test.com',   userName:'Ester3',  type:'server_error',  typeLabel:'La página no carga / Error servidor', severity:'critico',  device:'mobile_android', deviceLabel:'Móvil — Android',       description:'Al abrir la app aparece pantalla en blanco y consola muestra error 503.', status:'resuelto' },
-        ];
     }
 };

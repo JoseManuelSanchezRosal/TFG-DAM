@@ -335,15 +335,42 @@ app.admin = {
                 }
 
                 // Sort by time
-                citasDia.sort((a, b) => a.hora !== b.hora ? a.hora - b.hora : a.minutos - b.minutos);
+                citasDia.sort((a, b) => {
+                    let aHr = 0, aMin = 0, bHr = 0, bMin = 0;
+                    if (Array.isArray(a.hora)) { aHr = a.hora[0]; aMin = a.hora[1] || 0; }
+                    else if (typeof a.hora === 'string') { const p = a.hora.split(':'); aHr = parseInt(p[0], 10); aMin = parseInt(p[1], 10) || 0; }
+                    else { aHr = a.hora || 0; aMin = a.minutos || 0; }
+
+                    if (Array.isArray(b.hora)) { bHr = b.hora[0]; bMin = b.hora[1] || 0; }
+                    else if (typeof b.hora === 'string') { const p = b.hora.split(':'); bHr = parseInt(p[0], 10); bMin = parseInt(p[1], 10) || 0; }
+                    else { bHr = b.hora || 0; bMin = b.minutos || 0; }
+
+                    return aHr !== bHr ? aHr - bHr : aMin - bMin;
+                });
 
                 citasDia.forEach(cita => {
                     const servicio = cita.servicios && cita.servicios.length > 0 ? cita.servicios[0] : { nombre: 'Desconocido', duracionMinutos: 0 };
                     const cCliente = cita.usuario ? cita.usuario.nombre : "Cliente Anónimo";
                     
-                    const minTotal = cita.minutos + servicio.duracionMinutos + 15;
-                    const hrFin = cita.hora + Math.floor(minTotal / 60);
+                    let hrInicio = 0, minInicio = 0;
+                    if (Array.isArray(cita.hora)) {
+                        hrInicio = cita.hora[0];
+                        minInicio = cita.hora[1] || 0;
+                    } else if (typeof cita.hora === 'string') {
+                        const parts = cita.hora.split(':');
+                        hrInicio = parseInt(parts[0], 10);
+                        minInicio = parseInt(parts[1], 10) || 0;
+                    } else {
+                        hrInicio = cita.hora || 0;
+                        minInicio = cita.minutos || 0;
+                    }
+
+                    const minTotal = minInicio + servicio.duracionMinutos + 15;
+                    const hrFin = hrInicio + Math.floor(minTotal / 60);
                     const minFin = minTotal % 60;
+
+                    const timeStartStr = `${String(hrInicio).padStart(2,'0')}:${String(minInicio).padStart(2,'0')}`;
+                    const timeEndStr = `${String(hrFin).padStart(2,'0')}:${String(minFin).padStart(2,'0')}`;
 
                     const div = document.createElement('div');
                     div.className = 'cita-card';
@@ -352,7 +379,7 @@ app.admin = {
                             <button class="btn btn-outline btn-small" title="Editar Cita" onclick='app.admin.editCitaDialog(${JSON.stringify(cita).replace(/'/g, "&#39;")})' style="border:none; padding: 0.2rem;"><i class="fas fa-edit"></i></button>
                             <button class="delete-btn" title="Eliminar Global" onclick="app.admin.deleteCita(${cita.id})" style="position: static;"><i class="fas fa-trash"></i></button>
                         </div>
-                        <strong>${String(cita.hora).padStart(2,'0')}:${String(cita.minutos).padStart(2,'0')} - ${String(hrFin).padStart(2,'0')}:${String(minFin).padStart(2,'0')}</strong>
+                        <strong>${timeStartStr} - ${timeEndStr}</strong>
                         <div style="margin-top: 5px;">
                             <span style="display:inline-block; background:#222; color:#fff; padding:2px 6px; border-radius:4px; font-size:0.8rem">${cCliente}</span>
                             <span>${servicio.nombre}</span>

@@ -37,6 +37,22 @@ app.client = {
                 const nombres = servicios.map(s => s.nombre).join(', ') || 'Servicio estándar';
                 const totalPrecio = servicios.reduce((sum, s) => sum + s.precio, 0).toFixed(2);
                 
+                const cCliente = cita.usuario ? cita.usuario.nombre : (app.state.userName || 'Cliente');
+                
+                let hrInicio = 0, minInicio = 0;
+                if (Array.isArray(cita.hora)) {
+                    hrInicio = cita.hora[0];
+                    minInicio = cita.hora[1] || 0;
+                } else if (typeof cita.hora === 'string') {
+                    const parts = cita.hora.split(':');
+                    hrInicio = parseInt(parts[0], 10);
+                    minInicio = parseInt(parts[1], 10) || 0;
+                } else {
+                    hrInicio = cita.hora || 0;
+                    minInicio = cita.minutos || 0;
+                }
+                const timeStr = `${String(hrInicio).padStart(2,'0')}:${String(minInicio).padStart(2,'0')}`;
+                
                 const safeObj = JSON.stringify(cita).replace(/'/g, "&#39;");
                 const div = document.createElement('div');
                 div.className = 'cita-card';
@@ -47,8 +63,9 @@ app.client = {
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
-                    <strong style="display:block; margin-right: 3rem;">${nombres}</strong>
-                    <span style="display:inline-block; margin-top:0.5rem;"><i class="far fa-calendar"></i> ${cita.fecha} a las ${String(cita.hora).padStart(2,'0')}:${String(cita.minutos).padStart(2,'0')}</span><br>
+                    <div style="margin-bottom: 0.5rem; color: var(--color-gold); font-weight: bold; padding-right: 3rem;">${cCliente}</div>
+                    <strong style="display:block;">${nombres}</strong>
+                    <span style="display:inline-block; margin-top:0.5rem;"><i class="far fa-calendar"></i> ${cita.fecha} a las ${timeStr}</span><br>
                     <span style="display:inline-block; margin-top:0.25rem;"><i class="far fa-money-bill-alt"></i> ${totalPrecio}€</span>
                 `;
                 container.appendChild(div);

@@ -106,7 +106,7 @@ public class CitaService {
 
             boolean solapado = false;
             for (Cita c : citasDelDia) {
-                LocalTime cInicio = LocalTime.of(c.getHora(), c.getMinutos(), c.getSegundos());
+                LocalTime cInicio = c.getHora();
                 int cDuracion = c.getServicios() != null ? c.getServicios().stream().mapToInt(Servicio::getDuracionMinutos).sum() : 0;
                 LocalTime cFin = cInicio.plusMinutes(cDuracion + preparationTimeMinutes);
 
@@ -142,7 +142,7 @@ public class CitaService {
 
         List<Cita> citasDelDia = citaRepository.findByFecha(fechaInicio.toLocalDate());
         for (Cita c : citasDelDia) {
-            LocalDateTime cInicio = LocalDateTime.of(c.getFecha(), LocalTime.of(c.getHora(), c.getMinutos(), c.getSegundos()));
+            LocalDateTime cInicio = LocalDateTime.of(c.getFecha(), c.getHora());
             int duracionCita = preparationTimeMinutes;
             if (c.getServicios() != null) {
                 duracionCita += c.getServicios().stream().mapToInt(Servicio::getDuracionMinutos).sum();
@@ -157,9 +157,7 @@ public class CitaService {
         Cita cita = new Cita();
         cita.setUsuario(usuario);
         cita.setFecha(fechaInicio.toLocalDate());
-        cita.setHora(fechaInicio.getHour());
-        cita.setMinutos(fechaInicio.getMinute());
-        cita.setSegundos(0);
+        cita.setHora(fechaInicio.toLocalTime().withSecond(0).withNano(0));
         cita.setServicios(servicios);
 
         return citaRepository.save(cita);
@@ -194,7 +192,7 @@ public class CitaService {
         for (Cita c : citasDelDia) {
             if (c.getId().equals(citaId)) continue;
 
-            LocalDateTime cInicio = LocalDateTime.of(c.getFecha(), LocalTime.of(c.getHora(), c.getMinutos(), c.getSegundos()));
+            LocalDateTime cInicio = LocalDateTime.of(c.getFecha(), c.getHora());
             int duracionCita = preparationTimeMinutes;
             if (c.getServicios() != null) {
                 duracionCita += c.getServicios().stream().mapToInt(Servicio::getDuracionMinutos).sum();
@@ -206,9 +204,7 @@ public class CitaService {
             }
         }
         citaExistente.setFecha(nuevaFechaInicio.toLocalDate());
-        citaExistente.setHora(nuevaFechaInicio.getHour());
-        citaExistente.setMinutos(nuevaFechaInicio.getMinute());
-        citaExistente.setSegundos(0);
+        citaExistente.setHora(nuevaFechaInicio.toLocalTime().withSecond(0).withNano(0));
         citaExistente.setServicios(nuevosServicios);
 
         return citaRepository.save(citaExistente);

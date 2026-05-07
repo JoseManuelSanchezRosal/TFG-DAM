@@ -2,8 +2,8 @@ package com.tuturno.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -19,21 +19,14 @@ public class Cita {
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 
+    // Optimización: Uso de LocalTime para una gestión profesional de la hora
     @Column(nullable = false)
-    private Integer hora;
+    private LocalTime hora;
 
-    @Column(nullable = false)
-    private Integer minutos;
-
-    @Column(nullable = false)
-    private Integer segundos;
-
-    // Relación Muchos a Uno: Muchas citas pueden ser de un Usuario
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    // Relación Muchos a Uno: Muchas citas pueden tener el mismo Servicio
     @ManyToMany
     @JoinTable(
             name = "Cita_Servicio",

@@ -5,7 +5,7 @@ services:
     image: postgres:15
     container_name: tuturno_db_container
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       - POSTGRES_DB=tuturno_db
       - POSTGRES_USER=postgres
