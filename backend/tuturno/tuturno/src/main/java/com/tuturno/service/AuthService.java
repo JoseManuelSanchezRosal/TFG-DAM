@@ -16,6 +16,7 @@ public class AuthService {
     private final UsuarioService usuarioService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+
     public LoginResponseDTO login(LoginRequestDTO loginRequestDto) {
         Optional<Usuario> usuarioEncontrado = this.usuarioService.buscarPorEmail(loginRequestDto.email());
         if (usuarioEncontrado.isEmpty()) {
@@ -39,7 +40,6 @@ public class AuthService {
         // CORRECCIÓN: Le pasamos la contraseña sin encriptar,
         // porque UsuarioService.guardar() ya se encarga de encriptarla.
         usuario.setPassword(registerRequestDto.password());
-
 
 
         usuarioService.guardar(usuario);
